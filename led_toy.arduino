@@ -1,0 +1,135 @@
+
+
+int PIN_BASE=2;
+int PINS_TO_USE=10;
+
+
+
+#define STANDARD  0x0
+#define INSTANT   0x1  // not &0x1 ? then standard speed
+
+#define LEAVE_OFF 0x2
+#define LEAVE_ON  0x3
+// if neither LEAVE, then on off
+// maybe if both LEAVE, then off/on??
+
+#define RIGHTWARD 0x2 // 01? 
+#define LEFTWARD  0x4 // 10?
+#define CENTEROUT 0x6 // 11?
+
+#define SOLO       0x10
+#define NEIGHBOR   0x20
+#define SPAN       0x30
+#define FADE_MASK 0x30 // though instant implies no fade
+
+#define MAXVAL    0xff
+#define MIDVAL    0x7f
+#define MINVAL    0x00
+
+
+const int DELAY_BASE=25;
+int currentDelay = DELAY_BASE;
+void setup() {
+
+  // initialize digital pin 2 (base) to (base+count) as output:
+ 
+  for (int i = PIN_BASE; i <= PIN_BASE+PINS_TO_USE; i++) {
+    pinMode(i, OUTPUT);
+  }  
+  randomSeed(analogRead(0));
+}
+
+void loop(){
+  blinky(100);
+
+  run_the_line(PIN_BASE, PIN_BASE+PINS_TO_USE, 6, STANDARD);
+
+  grow(7,6,SOLO);
+  delay(250);
+  grow(7,6,LEAVE_ON);
+  delay(250);
+  grow(7,6,LEAVE_OFF);
+  delay(250);
+
+  blinky(100);
+}
+
+void blinky(int count) {
+  int i=0;
+  for (i = PIN_BASE; i < PIN_BASE+PINS_TO_USE; i++) {
+    digitalWrite(i, HIGH);
+  }  
+  delay(DELAY_BASE);
+  
+  for (i=0; i < count; i++) {
+    digitalWrite(random(PIN_BASE,PIN_BASE+PINS_TO_USE), random(LOW,HIGH+1) );
+    delay(random(1,3)* DELAY_BASE);
+  }
+  for (i = PIN_BASE; i < PIN_BASE+PINS_TO_USE; i++) {
+    digitalWrite(i, LOW);
+    delay(DELAY_BASE);
+  }  
+}
+
+/* 
+mode 0x11___ delay/fade  00 standard delay 01 fade around 1 10 fade around by 2 11 instant all
+mode 0x1___ fade
+*/
+void run_the_line(int first, int last, int passCount, byte mode) {
+  int thisDelay = 2*DELAY_BASE;
+  //if (mode & INSTANT == INSTANT) 
+  //  thisDelay=0;
+    
+  int i=0;
+  for (i = first; i <= last; i++) {
+    digitalWrite(i, LOW);
+    delay(thisDelay);
+  }
+  int pass=1; 
+  while (pass <= passCount) {   
+    for (i = first; i <= last; i++) {
+      digitalWrite(i, HIGH);
+      delay(thisDelay);
+      digitalWrite(i, LOW);
+    }
+    pass++;
+    if (pass > passCount)
+       return;
+    for (i = last-1; i > first; i--) {
+      digitalWrite(i, HIGH);
+      delay(thisDelay);
+      digitalWrite(i, LOW);
+    }
+    pass++;
+  }
+}
+
+/*
+* from - starting pin
+* count - number to act on
+*/
+
+void grow(int from, int num, byte mode) {
+  int thisDelay = 3*DELAY_BASE;
+//  if (mode & INSTANT == INSTANT) 
+//    thisDelay=0;
+    
+
+  int i=0;
+//  if (mode & SOLO==SOLO) {
+    for (i = 0; i < num; i++) {
+      // unless mode is LEAVE_OFF, turn on
+//      if (!(mode&LEAVE_OFF)==LEAVE_OFF) {
+        digitalWrite(from-i, HIGH);
+        digitalWrite(from+i, HIGH);
+        delay(thisDelay);
+//      }
+//      if (!(mode&LEAVE_ON)==LEAVE_ON) {
+        digitalWrite(from-i, LOW);
+        digitalWrite(from+i, LOW);
+        delay(thisDelay);
+//      }
+    }
+//  }
+  
+}
