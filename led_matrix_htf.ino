@@ -60,7 +60,7 @@ void setup() {
 
 #define BLOCK_WIDTH 12
 // In the first issue we will adapt the length of the sentence (characters)
-unsigned char ltr_buffer[BLOCK_WIDTH]={8,7,6,5,4,3,2,1,0,-1,-2,-3};
+int ltr_buffer[BLOCK_WIDTH]={8,7,6,5,4,3,2,1,0,-1,-2,-3};
 
 void loop() { 
 
