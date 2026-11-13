@@ -71,10 +71,7 @@ void loop() {
       }
       delay(75); // speed of animation
       lc.clearDisplay(0);
-    } 
-    if(letter == len){
-      letter = 0;
     }
-  }//end for letter  
+  }//end for letter
 
 }

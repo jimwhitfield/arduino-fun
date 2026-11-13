@@ -149,9 +149,9 @@ void loop(void) {
         tft.println(buf);
       }
       buf_idx = 0;
-      memset(buf, 0, 20);
+      memset(buf, 0, sizeof(buf));
     } else { // add 
-      buf[buf_idx++] = incomingByte;
+      if (buf_idx < (int)sizeof(buf) - 1) buf[buf_idx++] = incomingByte;  // drop overflow instead of overrunning buf
       buf[buf_idx] = '\0';
       Serial.println(buf);
     }

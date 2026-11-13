@@ -31,8 +31,8 @@ void loop() {
   sevseg.refreshDisplay();
 
   // if INTERVAL_MS has elapsed, ready the next value
-  int now = millis();
-  if (last_update + INTERVAL_MS < now) {
+  unsigned long now = millis();
+  if (now - last_update >= INTERVAL_MS) {  // unsigned subtraction is safe across millis() rollover
     // time to update
     last_update = now;
     if (direction_mode == Increasing) {

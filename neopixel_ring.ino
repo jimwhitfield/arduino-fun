@@ -191,7 +191,7 @@ uint32_t PastelWheel(byte WheelPos) {
    return strip.Color(0xff^(255 - WheelPos * 3), 0xff, 0xff^(WheelPos * 3));
   } else if(WheelPos < 170) {
     WheelPos -= 85;
-   return strip.Color(0xff, 0xff^(WheelPos * 3), 0xff*(255 - WheelPos * 3));
+   return strip.Color(0xff, 0xff^(WheelPos * 3), 0xff^(255 - WheelPos * 3));
   } else {
    WheelPos -= 170;
    return strip.Color(0xff^(WheelPos * 3), 0xff^(255 - WheelPos * 3), 0xff);
